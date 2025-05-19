@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
 .App-logo {
@@ -35,4 +37,23 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+input {
+  padding: 8px;
+  margin: 10px;
+  width: 200px;
 }
