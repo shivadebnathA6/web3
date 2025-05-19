@@ -5,6 +5,7 @@ const BSC_MAINNET_CHAIN_ID = '0x38'; // Chain ID for BSC Mainnet (56 in decimal)
 
 const WalletConnect = ({ setAccount }) => {
   const [error, setError] = useState('');
+  const [isConnecting, setIsConnecting] = useState(false);
 
   useEffect(() => {
     const checkNetwork = async () => {
@@ -54,11 +55,15 @@ const WalletConnect = ({ setAccount }) => {
   const connectWallet = async () => {
     if (window.ethereum) {
       try {
+        setIsConnecting(true);
+        setError('');
         const web3 = new Web3(window.ethereum);
         await window.ethereum.request({ method: 'eth_requestAccounts' });
         const accounts = await web3.eth.getAccounts();
         setAccount(accounts[0]);
+        setIsConnecting(false);
       } catch (err) {
+        setIsConnecting(false);
         setError('Failed to connect wallet');
       }
     } else {
@@ -67,9 +72,19 @@ const WalletConnect = ({ setAccount }) => {
   };
 
   return (
-    <div>
-      <button onClick={connectWallet}>Connect Wallet</button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+    <div className="wallet-connect">
+      <h2>Connect Your Wallet</h2>
+      <p>Connect your wallet to verify your assets on Binance Smart Chain</p>
+      
+      <button 
+        onClick={connectWallet} 
+        className="connect-button"
+        disabled={isConnecting}
+      >
+        {isConnecting ? 'Connecting...' : 'Connect Wallet'}
+      </button>
+      
+      {error && <p className="error-message">{error}</p>}
     </div>
   );
 };

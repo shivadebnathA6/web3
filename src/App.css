@@ -1,59 +1,787 @@
-.App {
-  text-align: center;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+/* Binance style CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  background-color: #0c0c0c;
+  color: #fff;
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+a {
+  color: #f8f8f8;
+  text-decoration: none;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header styles */
+.binance-header {
+  background-color: #0c0c0c;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.binance-header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.binance-logo {
+  height: 36px;
+  width: auto;
+}
+
+.desktop-nav {
+  display: none;
+}
+
+.desktop-nav ul {
+  display: flex;
+  list-style: none;
+  gap: 24px;
+}
+
+.desktop-nav a {
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.desktop-nav a:hover {
+  color: #F0B90B;
+}
+
+/* Mobile menu button */
+.mobile-menu-button {
+  width: 30px;
+  height: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  z-index: 1001;
+  position: relative;
+}
+
+.mobile-menu-button span {
+  display: block;
+  height: 3px;
+  background-color: #F0B90B;
+  width: 100%;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* When menu is open, transform hamburger to X */
+.mobile-menu-button.open span:first-child {
+  transform: rotate(45deg) translate(8px, 8px);
+}
+
+.mobile-menu-button.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-menu-button.open span:last-child {
+  transform: rotate(-45deg) translate(8px, -8px);
+}
+
+/* Mobile navigation menu */
+.mobile-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: #0c0c0c;
+  z-index: 1000;
+  padding-top: 80px;
+  overflow-y: auto;
+}
+
+.mobile-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-nav li {
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-nav a {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  display: block;
+  transition: color 0.3s;
+}
+
+.mobile-nav a:hover {
+  color: #F0B90B;
+}
+
+@media screen and (min-width: 768px) {
+  .desktop-nav {
+    display: block;
+  }
+
+  .mobile-menu-button {
+    display: none;
+  }
+
+  .mobile-nav {
+    display: none;
+  }
+
+  .verify-content h1 {
+    font-size: 60px;
+  }
+
+  .subtitle {
+    font-size: 20px;
+  }
+
+  .verify-button {
+    padding: 16px 32px;
+    font-size: 18px;
+  }
+  
+  .network-status {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 12px;
+    color: #F0B90B;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Main content styles */
+.verify-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 56px);
+  padding: 40px 0;
+  text-align: center;
+}
+
+.verify-content h1 {
+  font-size: 40px;
+  font-weight: 700;
+  color: #F0B90B;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #f8f8f8;
+  margin-bottom: 40px;
+}
+
+.verify-button-container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.verify-button {
+  background-color: #F0B90B;
+  color: #000;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.verify-button:hover {
+  background-color: #f8d12f;
+}
+
+.wallet-icon {
+  display: flex;
+  align-items: center;
+}
+
+/* Wallet connect container */
+.wallet-connect-container {
+  background-color: rgba(30, 30, 30, 0.5);
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.wallet-connect-container h2 {
+  margin-bottom: 24px;
+  color: #F0B90B;
+  font-size: 20px;
+}
+
+.wallet-connect-container button {
+  background-color: #F0B90B;
+  color: #000;
+  font-weight: 600;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.wallet-connect-container input {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.wallet-connect-container input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Binance approve container styles */
+.binance-approve-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: rgba(25, 25, 25, 0.4);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.verify-section {
+  margin-bottom: 30px;
+}
+
+.binance-approve-container h2 {
+  color: #F0B90B;
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.balance-display {
+  background-color: rgba(240, 185, 11, 0.1);
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.balance-label {
+  font-size: 16px;
+  color: #f8f8f8;
+}
+
+.balance-amount {
+  font-size: 18px;
+  font-weight: 600;
+  color: #F0B90B;
+}
+
+.approve-input-group,
+.input-group {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.approve-input-group label,
+.input-group label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #f8f8f8;
+}
+
+.binance-input {
+  width: 100%;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  color: white;
+  font-size: 16px;
+}
+
+.binance-input:focus {
+  outline: none;
+  border-color: #F0B90B;
+}
+
+.binance-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #F0B90B;
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.2s;
+}
+
+.binance-button:hover {
+  background-color: #f8d12f;
+}
+
+.status-message {
+  margin-top: 16px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.admin-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 24px;
+  margin-top: 24px;
+}
+
+.admin-badge {
+  display: inline-block;
+  background-color: rgba(240, 185, 11, 0.2);
+  color: #F0B90B;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.admin-form {
+  margin-top: 20px;
+}
+
+.non-admin-message {
+  color: #f8f8f8;
+  opacity: 0.7;
+  font-style: italic;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.error-message {
+  margin-top: 16px;
+  color: #ff6b6b;
+  background-color: rgba(255, 107, 107, 0.1);
+  padding: 12px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 14px;
+  width: 100%;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Wallet connect styles */
+.wallet-connect {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.wallet-connect h2 {
+  color: #F0B90B;
+  margin-bottom: 16px;
+}
+
+.wallet-connect p {
+  color: #f8f8f8;
+  margin-bottom: 24px;
+}
+
+.connect-button {
+  background-color: #F0B90B;
+  color: #000;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.connect-button:hover {
+  background-color: #f8d12f;
+}
+
+.connect-button:disabled {
+  background-color: #6d5507;
+  cursor: not-allowed;
+}
+
+/* Connected wallet styles */
+.wallet-connected {
+  margin-bottom: 24px;
+  background-color: rgba(240, 185, 11, 0.1);
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.wallet-address {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  word-break: break-all;
+}
+
+.address-label {
+  font-size: 14px;
+  color: #f8f8f8;
+  opacity: 0.7;
+}
+
+.address-value {
+  font-size: 16px;
+  color: #F0B90B;
+  font-family: monospace;
+}
+
+.verify-button:disabled {
+  background-color: #6d5507;
+  cursor: not-allowed;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1500;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background-color: #171717;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.3s ease;
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+  background-color: #1e1e1e;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #F0B90B;
+  font-size: 20px;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 24px;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.modal-close:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.modal-body {
+  padding: 24px;
+  text-align: center;
+}
+
+.success-icon {
+  margin: 0 auto 20px;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-message {
+  font-size: 18px;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.amount-box {
+  background-color: rgba(240, 185, 11, 0.1);
+  border-radius: 4px;
+  padding: 16px;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.amount-label {
+  font-size: 14px;
+  color: #f8f8f8;
+  opacity: 0.7;
+}
+
+.amount-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #F0B90B;
+}
+
+.modal-footer {
+  padding: 16px 24px 24px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Admin Dashboard Styles */
+.admin-dashboard {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+  background-color: rgba(25, 25, 25, 0.4);
+  border-radius: 8px;
+}
+
+.admin-dashboard h2 {
+  color: #F0B90B;
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+
+.admin-description {
+  margin-bottom: 24px;
+  color: #f8f8f8;
+  font-size: 16px;
+}
+
+.loading-spinner {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  padding: 40px 0;
 }
 
-.App-link {
-  color: #61dafb;
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(240, 185, 11, 0.3);
+  border-radius: 50%;
+  border-top-color: #F0B90B;
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 16px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
-button {
-  padding: 10px 20px;
-  margin: 10px;
-  background-color: #28a745;
-  color: white;
-  border: none;
+.approvals-table-container {
+  overflow-x: auto;
+  margin: 20px 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.approvals-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+.approvals-table th {
+  background-color: #202020;
+  color: #F0B90B;
+  text-align: left;
+  padding: 16px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
+  user-select: none;
+  position: relative;
 }
 
-button:hover {
-  background-color: #218838;
+.approvals-table th:hover {
+  background-color: #252525;
 }
 
-input {
-  padding: 8px;
-  margin: 10px;
-  width: 200px;
+.sort-icon {
+  margin-left: 8px;
+  display: inline-block;
+}
+
+.approvals-table td {
+  padding: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f8f8f8;
+  font-size: 14px;
+}
+
+.approvals-table tr:hover td {
+  background-color: rgba(240, 185, 11, 0.05);
+}
+
+.wallet-cell {
+  position: relative;
+}
+
+.full-address {
+  display: none;
+}
+
+.truncated-address {
+  display: inline-block;
+}
+
+.wallet-cell:hover .full-address {
+  position: absolute;
+  top: -30px;
+  left: 0;
+  display: block;
+  background-color: #202020;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  word-break: break-all;
+  max-width: 300px;
+}
+
+.amount-cell {
+  font-weight: 600;
+  color: #F0B90B;
+}
+
+.tx-hash-link {
+  color: #F0B90B;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.tx-hash-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-badge.approved {
+  background-color: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+}
+
+.status-badge.pending {
+  background-color: rgba(243, 156, 18, 0.15);
+  color: #f39c12;
+}
+
+.status-badge.failed {
+  background-color: rgba(231, 76, 60, 0.15);
+  color: #e74c3c;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+  font-style: italic;
+}
+
+/* Admin tabs */
+.admin-tabs {
+  display: flex;
+  margin: 16px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  color: #f8f8f8;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  border-bottom: 2px solid transparent;
+}
+
+.tab-button:hover {
+  color: #F0B90B;
+}
+
+.tab-button.active {
+  color: #F0B90B;
+  border-bottom: 2px solid #F0B90B;
 }

