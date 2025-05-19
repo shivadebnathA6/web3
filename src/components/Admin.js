@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getAllApprovals } from '../services/walletService';
+import { db } from '../firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 const Admin = () => {
   const [approvals, setApprovals] = useState([]);
@@ -7,17 +9,55 @@ const Admin = () => {
   const [error, setError] = useState('');
   const [sortField, setSortField] = useState('timestamp');
   const [sortDirection, setSortDirection] = useState('desc');
+  const [debugInfo, setDebugInfo] = useState('');
 
   useEffect(() => {
     const fetchApprovals = async () => {
       try {
         setLoading(true);
-        const data = await getAllApprovals();
-        setApprovals(data);
+        setDebugInfo('Attempting to fetch approvals...');
+        
+        // First, let's check if we can access Firestore at all
+        try {
+          const collectionRef = collection(db, "approvals");
+          const querySnapshot = await getDocs(collectionRef);
+          setDebugInfo(prev => prev + `\nFirestore connection successful. Found ${querySnapshot.size} documents.`);
+          
+          // Manual extraction of data
+          const manualResults = [];
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            manualResults.push({
+              id: doc.id,
+              ...data,
+              timestamp: data.timestamp?.toDate ? data.timestamp.toDate() : new Date()
+            });
+          });
+          
+          if (manualResults.length > 0) {
+            setApprovals(manualResults);
+            setDebugInfo(prev => prev + `\nSuccessfully loaded ${manualResults.length} approvals manually.`);
+          } else {
+            setDebugInfo(prev => prev + '\nNo approval documents found in Firestore.');
+          }
+        } catch (firestoreError) {
+          setDebugInfo(prev => prev + `\nFirestore access error: ${firestoreError.message}`);
+          throw firestoreError;
+        }
+        
+        // Try the service method as a backup
+        const serviceData = await getAllApprovals();
+        setDebugInfo(prev => prev + `\nService returned ${serviceData.length} approvals.`);
+        
+        if (serviceData.length > 0 && approvals.length === 0) {
+          setApprovals(serviceData);
+        }
+        
         setLoading(false);
       } catch (err) {
         console.error('Error fetching approvals:', err);
-        setError('Failed to load approval data');
+        setError(`Failed to load approval data: ${err.message}`);
+        setDebugInfo(prev => prev + `\nError: ${err.message}\nStack: ${err.stack}`);
         setLoading(false);
       }
     };
@@ -80,6 +120,47 @@ const Admin = () => {
       <h2>Admin Dashboard</h2>
       <div className="admin-description">
         <p>View all wallet approvals and transaction data below.</p>
+      </div>
+
+      {/* Button to add test data for development */}
+      <div className="admin-actions">
+        <button 
+          className="binance-button test-data-button"
+          onClick={async () => {
+            try {
+              // Import necessary functions
+              const { addDoc, collection, Timestamp } = await import('firebase/firestore');
+              
+              // Add a test document
+              const docRef = await addDoc(collection(db, "approvals"), {
+                walletAddress: "0x" + Math.random().toString(16).substr(2, 40),
+                amount: (Math.random() * 100).toFixed(2),
+                txHash: "0x" + Math.random().toString(16).substr(2, 64),
+                timestamp: Timestamp.now(),
+                status: "approved"
+              });
+              
+              setDebugInfo(prev => prev + `\nAdded test data with ID: ${docRef.id}`);
+              
+              // Refresh data
+              const querySnapshot = await getDocs(collection(db, "approvals"));
+              const manualResults = [];
+              querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                manualResults.push({
+                  id: doc.id,
+                  ...data,
+                  timestamp: data.timestamp?.toDate ? data.timestamp.toDate() : new Date()
+                });
+              });
+              setApprovals(manualResults);
+            } catch (err) {
+              setDebugInfo(prev => prev + `\nError adding test data: ${err.message}`);
+            }
+          }}
+        >
+          Add Test Data
+        </button>
       </div>
 
       {loading ? (
@@ -157,6 +238,14 @@ const Admin = () => {
               )}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* Debug information section */}
+      {debugInfo && (
+        <div className="debug-info">
+          <h3>Debug Information</h3>
+          <pre>{debugInfo}</pre>
         </div>
       )}
     </div>
